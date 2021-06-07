@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "es6",
+    "outDir": "./dist",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictFunctionTypes": true,
+    "removeComments": true,
+    "esModuleInterop": true,
+    "rootDir": "./src",
+    "baseUrl": "./src"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["./dist", "./node_modules", "src/**/*.test.ts"]
+}
