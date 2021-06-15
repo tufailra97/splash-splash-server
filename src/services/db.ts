@@ -7,7 +7,7 @@ class Database {
     password: AppConfig.getConfigs().password,
     user: AppConfig.getConfigs().user,
     host: AppConfig.getConfigs().host,
-    port: AppConfig.getConfigs().port
+    port: AppConfig.getConfigs().dbPort
   });
 
   public static getPool = (): Pool => {

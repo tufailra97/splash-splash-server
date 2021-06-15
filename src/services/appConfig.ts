@@ -1,7 +1,8 @@
-import { IAppConfig } from 'types/AppConfig';
+import { IAppConfig } from 'types';
 
 class AppConfig {
-  private static port: number = Number(process.env.DB_PORT);
+  private static port: number = Number(process.env.PORT);
+  private static dbPort: number = Number(process.env.DB_PORT);
   private static host: string | null = process.env.DB_HOST || null;
   private static user: string | null = process.env.DB_ROOT_USER || null;
   private static database: string | null = process.env.DB_NAME || null;
@@ -13,12 +14,13 @@ class AppConfig {
       port: AppConfig.port,
       user: AppConfig.user,
       host: AppConfig.host,
+      dbPort: AppConfig.dbPort,
       database: AppConfig.database,
       password: AppConfig.password
     } as IAppConfig);
 
   static validateConfigs = () => {
-    if (isNaN(AppConfig.port)) {
+    if (isNaN(AppConfig.dbPort)) {
       throw new Error('PORT is not defined');
     }
 
