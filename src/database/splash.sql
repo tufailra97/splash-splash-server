@@ -1,4 +1,11 @@
 -- create a new table
-create database splash; 
+CREATE TABLE users (
+	userId uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+	username text NOT NULL,
+	email text NOT NULL,
+	password text NOT NULL
+)
 
--- create a new table in the database
+
+-- insert into the user table
+INSERT INTO users (password, username, email) VALUES ('password', 'username', 'password')

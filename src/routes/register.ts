@@ -1,9 +1,11 @@
 import { Router, Request, Response } from 'express';
+
 import { Database } from 'services';
+import { ValidateParams } from 'utils';
 
 const router = Router();
 
-interface IRegister extends Request {
+interface IRegisterRequest extends Request {
   body: {
     username: string;
     password: string;
@@ -11,10 +13,54 @@ interface IRegister extends Request {
   };
 }
 
-router.post('/register', async (request: IRegister, response: Response) => {
-  const { username, password, email } = request.body;
+router.post(
+  '/register',
+  async (request: IRegisterRequest, response: Response) => {
+    const { username, password, email } = request.body;
+    const validatedEmail = await ValidateParams.validateEmail(email);
+    const validatedPassword = await ValidateParams.validatePassword(password);
+    const validatedUsername = await ValidateParams.vlidateUsername(username);
 
-  response.json({ username, password, email });
-});
+    let errors: string[] = [];
+
+    if (!validatedEmail.isValid) {
+      const errorMessage = validatedEmail.error?.details[0].message as string;
+      errors.push(errorMessage);
+    }
+
+    if (!validatedPassword.isValid) {
+      const errorMessage = validatedPassword.error?.details[0]
+        .message as string;
+      errors.push(errorMessage);
+    }
+
+    if (!validatedUsername.isValid) {
+      const errorMessage = validatedUsername.error?.details[0]
+        .message as string;
+      errors.push(errorMessage);
+    }
+
+    if (
+      !validatedUsername.isValid ||
+      !validatedEmail.isValid ||
+      !validatedPassword.isValid
+    ) {
+      return response.status(404).json({ errors });
+    }
+
+    try {
+      const query = await Database.getPool().query(
+        `INSERT INTO users (email, password, username) VALUES($1, $2, $3) RETURNING *`,
+        [email, password, username]
+      );
+
+      response.json({
+        query
+      });
+    } catch (error) {
+      response.status(501).json('Internal Server Error');
+    }
+  }
+);
 
 export default router;
