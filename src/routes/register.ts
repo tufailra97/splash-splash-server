@@ -1,4 +1,6 @@
 import { Router, Request, Response } from 'express';
+import httpStatus from 'http-status';
+import bcrypt from 'bcrypt';
 
 import { Database } from 'services';
 import { ValidateParams } from 'utils';
@@ -44,20 +46,34 @@ router.post(
       !validatedPassword.isValid ||
       !validatedUsername.isValid
     ) {
-      return response.status(404).json({ errors });
+      return response.status(httpStatus.BAD_REQUEST).json({ errors });
     }
 
+    const emails = await Database.pool.query(
+      `SELECT email FROM users where email = $1`,
+      [email]
+    );
+
+    if (emails.rows.length)
+      return response
+        .status(httpStatus.BAD_REQUEST)
+        .json({ errors: [`Email ${email} is already in use.`] });
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
     try {
-      const query = await Database.getPool().query(
+      const query = await Database.pool.query(
         `INSERT INTO users (email, password, username) VALUES($1, $2, $3) RETURNING *`,
-        [email, password, username]
+        [email, hashedPassword, username]
       );
 
-      response.json({
+      response.status(httpStatus.OK).json({
         query
       });
     } catch (error) {
-      response.status(501).json('Internal Server Error');
+      response
+        .status(httpStatus.INTERNAL_SERVER_ERROR)
+        .json({ errors: [httpStatus[httpStatus.INTERNAL_SERVER_ERROR]] });
     }
   }
 );

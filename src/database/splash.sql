@@ -9,3 +9,6 @@ CREATE TABLE users (
 
 -- insert into the user table
 INSERT INTO users (password, username, email) VALUES ('password', 'username', 'password')
+
+-- delete row from table 
+DELETE FROM users where email = '';
