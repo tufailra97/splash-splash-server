@@ -1,9 +1,9 @@
 require('dotenv').config();
-import express, { Request, response, Response } from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 
 import { AppConfig } from 'services';
-import routes from 'routes';
+import routes from 'api';
 
 const app = express();
 app.use(cors());

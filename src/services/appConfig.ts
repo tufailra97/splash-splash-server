@@ -9,7 +9,7 @@ class AppConfig {
   private static password: string | null =
     process.env.DB_ROOT_USER_PASSWORD || null;
 
-  static getConfigs = () =>
+  public static getConfigs = () =>
     ({
       port: AppConfig.port,
       user: AppConfig.user,
@@ -19,7 +19,7 @@ class AppConfig {
       password: AppConfig.password
     } as IAppConfig);
 
-  static validateConfigs = () => {
+  public static validateConfigs = () => {
     if (isNaN(AppConfig.dbPort)) {
       throw new Error('PORT is not defined');
     }
