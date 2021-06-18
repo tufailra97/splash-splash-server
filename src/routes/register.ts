@@ -68,7 +68,8 @@ router.post(
       );
 
       response.status(httpStatus.OK).json({
-        query
+        message: 'User has been created successfully',
+        data: { userId: query.rows[0].userid }
       });
     } catch (error) {
       response
