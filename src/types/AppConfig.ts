@@ -5,4 +5,6 @@ export interface IAppConfig {
   host: string;
   database: string;
   password: string;
+  bCryptSaltRounds: number;
+  jwtSecretKey: string;
 }

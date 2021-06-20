@@ -16,5 +16,6 @@ app.get('/', (_: Request, res: Response) => {
 });
 
 app.use('/v1/user', routes.register);
+app.use('/v1/user', routes.login);
 
-app.listen(AppConfig.getConfigs().port, (): void => {});
+app.listen(AppConfig.getConfigs().port);

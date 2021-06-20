@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import bcrypt from 'bcrypt';
 
-import { Database } from 'services';
+import { AppConfig, Database } from 'services';
 import { ValidateParams } from 'utils';
 
 const router = Router();
@@ -50,7 +50,7 @@ router.post(
     }
 
     const emails = await Database.pool.query(
-      `SELECT email FROM users where email = $1`,
+      `SELECT email FROM users WHERE email = $1`,
       [email]
     );
 
@@ -59,7 +59,10 @@ router.post(
         .status(httpStatus.BAD_REQUEST)
         .json({ errors: [`Email ${email} is already in use.`] });
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(
+      password,
+      AppConfig.getConfigs().bCryptSaltRounds
+    );
 
     try {
       const query = await Database.pool.query(

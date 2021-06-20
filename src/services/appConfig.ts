@@ -6,6 +6,11 @@ class AppConfig {
   private static host: string | null = process.env.DB_HOST || null;
   private static user: string | null = process.env.DB_ROOT_USER || null;
   private static database: string | null = process.env.DB_NAME || null;
+  private static jwtSecretKey: string | null =
+    process.env.BCRYPT_SALT_ROUNDS || null;
+  private static bCryptSaltRounds: number = Number(
+    process.env.BCRYPT_SALT_ROUNDS
+  );
   private static password: string | null =
     process.env.DB_ROOT_USER_PASSWORD || null;
 
@@ -16,12 +21,22 @@ class AppConfig {
       host: AppConfig.host,
       dbPort: AppConfig.dbPort,
       database: AppConfig.database,
-      password: AppConfig.password
+      password: AppConfig.password,
+      bCryptSaltRounds: AppConfig.bCryptSaltRounds,
+      jwtSecretKey: AppConfig.jwtSecretKey
     } as IAppConfig);
 
   public static validateConfigs = () => {
+    if (isNaN(AppConfig.bCryptSaltRounds)) {
+      throw new Error('BCRYPT_SALT_ROUNDS is not defined');
+    }
+
     if (isNaN(AppConfig.dbPort)) {
       throw new Error('PORT is not defined');
+    }
+
+    if (!AppConfig.jwtSecretKey || !AppConfig.jwtSecretKey.length) {
+      throw new Error('JWT_SECRET_KEY is not defined');
     }
 
     if (!AppConfig.database || !AppConfig.database.length) {

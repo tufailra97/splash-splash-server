@@ -12,3 +12,5 @@ INSERT INTO users (password, username, email) VALUES ('password', 'username', 'p
 
 -- delete row from table 
 DELETE FROM users where email = '';
+
+SELECT * from users;
