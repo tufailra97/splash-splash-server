@@ -10,6 +10,7 @@
     "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts"
   },
   "dependencies": {
+    "@prisma/client": "^2.25.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
@@ -35,6 +36,7 @@
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-prettier": "^3.4.0",
     "prettier": "^2.3.2",
+    "prisma": "2.25.0",
     "ts-node": "^10.0.0",
     "ts-node-dev": "^1.1.6",
     "tsconfig-paths": "^3.9.0",

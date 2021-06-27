@@ -18,7 +18,7 @@ interface IRegisterRequest extends Request {
 router.post(
   '/register',
   async (request: IRegisterRequest, response: Response) => {
-    let errors: string[] = [];
+    const errors: string[] = [];
     const { username, password, email } = request.body;
     const validatedEmail = await ValidateParams.validateEmail(email);
     const validatedPassword = await ValidateParams.validatePassword(password);
