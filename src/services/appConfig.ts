@@ -27,11 +27,11 @@ class AppConfig {
     } as IAppConfig);
 
   public static validateConfigs = () => {
-    if (isNaN(AppConfig.bCryptSaltRounds)) {
+    if (Number.isNaN(AppConfig.bCryptSaltRounds)) {
       throw new Error('BCRYPT_SALT_ROUNDS is not defined');
     }
 
-    if (isNaN(AppConfig.dbPort)) {
+    if (Number.isNaN(AppConfig.dbPort)) {
       throw new Error('PORT is not defined');
     }
 
