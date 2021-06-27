@@ -1,12 +1,10 @@
 import { Router, Response, Request } from 'express';
-import { QueryResult } from 'pg';
 import httpStatus from 'http-status';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import { AppConfig, Database } from 'services';
 import { ValidateParams } from 'utils';
-import { User } from 'types';
 
 const router = Router();
 
@@ -17,47 +15,50 @@ interface IRegisterRequest extends Request {
   };
 }
 
-router.post('/login', async (request: IRegisterRequest, response: Response) => {
-  const { password, email } = request.body;
+router.post(
+  '/login',
+  async (request: IRegisterRequest, response: Response): Promise<any> => {
+    const { password, email } = request.body;
 
-  const validatedEmail = await ValidateParams.validateEmail(email);
+    const validatedEmail = await ValidateParams.validateEmail(email);
 
-  if (!validatedEmail.isValid) {
-    const errorMessage = validatedEmail.error?.details[0].message;
-    return response.status(httpStatus.BAD_REQUEST).json({
-      errors: [errorMessage]
-    });
-  }
+    if (!validatedEmail.isValid) {
+      const errorMessage = validatedEmail.error?.details[0].message;
+      return response.status(httpStatus.BAD_REQUEST).json({
+        errors: [errorMessage]
+      });
+    }
 
-  const query: QueryResult<User.IUsers> = await Database.pool.query(
-    `SELECT * FROM users WHERE email = $1`,
-    [email]
-  );
-
-  if (!query.rowCount)
-    return response.status(httpStatus.BAD_REQUEST).json({
-      errors: [`Email ${email} not found`]
+    const user = await Database.prisma.user.findUnique({
+      where: {
+        email
+      }
     });
 
-  const user = query.rows[0];
-  const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!user)
+      return response.status(httpStatus.BAD_REQUEST).json({
+        errors: [`Email ${email} not found`]
+      });
 
-  if (!isPasswordValid)
-    return response
-      .status(httpStatus.UNAUTHORIZED)
-      .json({ errors: ['Invalid password'] });
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
-  try {
-    const token = jwt.sign(
-      { id: user.userid },
-      AppConfig.getConfigs().jwtSecretKey,
-      { expiresIn: '2h' }
-    );
+    if (!isPasswordValid)
+      return response
+        .status(httpStatus.UNAUTHORIZED)
+        .json({ errors: ['Invalid password'] });
 
-    response.status(httpStatus.OK).json({ token });
-  } catch (error) {
-    response.status(httpStatus.OK).json({ error });
+    try {
+      const token = jwt.sign(
+        { id: user.id },
+        AppConfig.getConfigs().jwtSecretKey,
+        { expiresIn: '2h' }
+      );
+
+      return response.status(httpStatus.OK).json({ token });
+    } catch (error) {
+      return response.status(httpStatus.OK).json({ error });
+    }
   }
-});
+);
 
 export default router;

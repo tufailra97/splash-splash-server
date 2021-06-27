@@ -1,14 +1,7 @@
-import { Pool } from 'pg';
-import AppConfig from './appConfig';
+import { PrismaClient } from '@prisma/client';
 
 class Database {
-  public static pool: Pool = new Pool({
-    database: AppConfig.getConfigs().database,
-    password: AppConfig.getConfigs().password,
-    user: AppConfig.getConfigs().user,
-    host: AppConfig.getConfigs().host,
-    port: AppConfig.getConfigs().dbPort
-  });
+  public static prisma = new PrismaClient();
 }
 
 export default Database;

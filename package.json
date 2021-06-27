@@ -7,7 +7,9 @@
   "author": "tufailra97 <tufailra97@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts"
+    "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
+    "prisma:migrate": "npx prisma migrate dev --name update",
+    "prisma:generate": "npx prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^2.25.0",
