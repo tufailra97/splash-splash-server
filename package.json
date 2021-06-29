@@ -8,8 +8,10 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
-    "prisma:migrate": "npx prisma migrate dev --name update",
-    "prisma:generate": "npx prisma generate"
+    "prisma:migrate-create": "npx prisma migrate dev --create-only",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:generate": "npx prisma generate --watch",
+    "prisma:studio": "npx prisma studio"
   },
   "dependencies": {
     "@prisma/client": "^2.25.0",

@@ -19,9 +19,14 @@ model User {
 
 model Favourites {
   id          String   @id @default(uuid())
-  name        String
-  userId      String
-  dateCreated DateTime @default(now())
+  description String?
+  imgId       String   @map("img_id")
+  imgRaw      String?  @map("img_raw")
+  imgFull     String?  @map("img_full")
+  imgSml      String?  @map("img_sml")
+  imgRegular  String?  @map("img_regular")
+  userId      String   @map("user_id")
+  dateCreated DateTime @default(now()) @map("date_create")
   user        User     @relation(fields: [userId], references: [id])
 
   @@map(name: "favourites")

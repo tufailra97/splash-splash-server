@@ -19,7 +19,7 @@ router.post(
   '/register',
   async (request: IRegisterRequest, response: Response): Promise<any> => {
     const errors: string[] = [];
-    const { username, password, email } = request.body;
+    const { email, username, password } = request.body;
     const validatedEmail = await ValidateParams.validateEmail(email);
     const validatedPassword = await ValidateParams.validatePassword(password);
     const validatedUsername = await ValidateParams.vlidateUsername(username);
@@ -49,13 +49,13 @@ router.post(
       return response.status(httpStatus.BAD_REQUEST).json({ errors });
     }
 
-    const emails: User[] = await Database.prisma.user.findMany({
+    const users: User[] = await Database.prisma.user.findMany({
       where: {
         email
       }
     });
 
-    if (emails.length)
+    if (users.length)
       return response
         .status(httpStatus.BAD_REQUEST)
         .json({ errors: [`Email ${email} is already in use.`] });

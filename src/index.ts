@@ -1,4 +1,6 @@
+/* eslint-disable import/first */
 require('dotenv').config();
+
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 
@@ -17,5 +19,7 @@ app.get('/', (_: Request, res: Response) => {
 
 app.use('/v1/user', routes.register);
 app.use('/v1/user', routes.login);
+app.use('/v1/favourites', routes.addFavourites);
+app.use('/v1/favourites', routes.deleteFavourites);
 
 app.listen(AppConfig.getConfigs().port);
